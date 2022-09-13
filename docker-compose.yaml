@@ -5,21 +5,23 @@
       - "8080:80"
       - "8443:443"
     volumes:
-      - Volum:/volum:rw
-      - ./things/index.html:/volum/www/index.html
-      - ./things/default.conf:/etc/nginx/conf.d/default.conf
+      - Volume:/Volum:rw
+      - ./things/nginx/www:/Volum/nginx/www
+      - ./things/nginx/default.conf:/etc/nginx/conf.d/default.conf
+  
   server:
     image: centos:latest
     container_name: centos
     volumes:
-      - Volum:/volum:rw
-      - ./things/script:/volum/www/scr/script
-    command: [/volum/www/scr/script]
+      - Volume:/Volum:rw
+      - ./things/nginx/script:/Volum/nginx/www/scr/script
+    command: [cat /Volum/nginx/www/scr/script]
+    command: [/Volum/nginx/www/scr/script]
+
   certbot:
     image: certbot/certbot:latest
     container_name: certbot
-    restart: unless-stopped
     volumes:
-      - Volum:/volum:rw
-      - ./things/www:/var/www/:rw
-      - ./things/www:/etc/letsencrypt/:rw
+      - Volume:/Volum:rw
+      - ./things/nginx/www:/Volum/nginx/www
+      - ./things/certbot:/etc/letsencrypt
